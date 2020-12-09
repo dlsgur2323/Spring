@@ -1,11 +1,16 @@
 package kr.or.ddit.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -95,6 +100,45 @@ public class MemberController {
 		
 		return fileName;
 	}
+	
+	public String execute(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		String url ="";
+		
+		//response로 보내기
+		response.setContentType("text/html;charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+		try {
+			//Exception처리
+			//if(true) throw new SQLException("테스트 ExceptionLoggerHelper");
+			
+			memberService.regist(member);
+
+			out.println("<script>");
+			out.println("alert('회원등록이 정상적으로 되었습니다.');");
+			out.println("window.opener.location.href='"+request.getContextPath()+"/member/list.do';");  //절대주소
+			out.println("window.close();");
+			out.println("</script>");
+			
+		} catch (SQLException e) {
+			out.println("<script>");
+			out.println("alert('회원등록이 실패했습니다.');");
+			//out.println("window.close();");
+			out.println("history.go(-1);");
+			out.println("</script>");
+			
+			e.printStackTrace();
+			ExceptionLoggerHelper.write(request, e, memberService);
+			
+		}finally {
+			if(out != null) 
+			   out.close();
+		}
+		return url;
+	}
+	
 }
 
 
