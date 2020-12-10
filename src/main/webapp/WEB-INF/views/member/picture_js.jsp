@@ -12,7 +12,7 @@
 
 <script>
 
-function imageChane_go(){
+function imageChange_go(){
 	$('input[name="checkUpload"]').val(0);
 	preViewPicture($('input#inputFile')[0],$("div#pictureView"));
 }
