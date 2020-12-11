@@ -14,28 +14,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.or.ddit.command.SearchCriteria;
+import kr.or.ddit.dto.BoardVO;
 import kr.or.ddit.dto.NoticeVO;
+import kr.or.ddit.service.BoardService;
 import kr.or.ddit.service.NoticeService;
 
 @Controller
-@RequestMapping("/notice")
-public class NoticeController {
+@RequestMapping("/board")
+public class BoardController {
 	
 	@Autowired
-	private NoticeService noticeService;
+	private BoardService boardService;
 	
 	@RequestMapping("/main")
 	public String main() {
-		String url = "notice/main.open";
+		String url = "board/main.open";
 		return url;
 	}
 	
 	@RequestMapping("/list") 
 	public ModelAndView list(SearchCriteria cri ,ModelAndView mnv) throws Exception{
 		
-		String url = "/notice/list.open";
+		String url = "/board/list.open";
 		
-		Map<String,Object> dataMap = noticeService.getNoticeList(cri);
+		Map<String,Object> dataMap = boardService.getBoardList(cri);
 		mnv.addAllObjects(dataMap);
 		mnv.setViewName(url);
 		
@@ -44,13 +46,13 @@ public class NoticeController {
 	
 	@RequestMapping("/registForm")
 	public String registForm() {
-		String url = "notice/regist.open";
+		String url = "board/regist.open";
 		return url;
 	}
 	
 	@RequestMapping(value="/regist", method=RequestMethod.POST)
-	public void regist(NoticeVO notice, HttpServletResponse response)throws Exception {
-		noticeService.write(notice);
+	public void regist(BoardVO board, HttpServletResponse response)throws Exception {
+		boardService.write(board);
 		
 		response.setContentType("text/html;charset=utf-8");
 		
@@ -63,54 +65,54 @@ public class NoticeController {
 	}
 	
 	@RequestMapping(value="/detail", method=RequestMethod.GET)
-	public String detail(int nno,@RequestParam(defaultValue="") String from, Model model) throws Exception {
-		String url = "/notice/detail.open";
+	public String detail(int bno,@RequestParam(defaultValue="") String from, Model model) throws Exception {
+		String url = "/board/detail.open";
 		
-		NoticeVO notice = null;
+		BoardVO board = null;
 		//motify 취소 했을때 조회수 2 증가하는 문제 해결
 		if(from.equals("modify")) {
-			notice = noticeService.getNoticeModify(nno);
+			board = boardService.getBoardModify(bno);
 		}else {
-			notice = noticeService.getNotice(nno);
+			board = boardService.getBoard(bno);
 		}
 		
-		model.addAttribute("notice", notice);
+		model.addAttribute("board", board);
 			
 		return url;
 	}
 	
 	@RequestMapping(value="/modifyForm", method=RequestMethod.GET)
-	public String modifyForm(int nno, Model model) throws Exception {
-		String url = "/notice/modify.open";
+	public String modifyForm(int bno, Model model) throws Exception {
+		String url = "/board/modify.open";
 	
-		NoticeVO notice = noticeService.getNoticeModify(nno);
+		BoardVO board = boardService.getBoardModify(bno);
 		
-		model.addAttribute("notice", notice);
+		model.addAttribute("board", board);
 			
 		return url;
 	}
 	
 	@RequestMapping(value="/modify",method=RequestMethod.POST)
-	public void modify(NoticeVO notice, HttpServletResponse response)
+	public void modify(BoardVO board, HttpServletResponse response)
 			throws Exception {
 		// 파라메터 저장
-		noticeService.modify(notice);
+		boardService.modify(board);
 		
 		response.setContentType("text/html;charset=utf-8");
 		PrintWriter out = response.getWriter();
 		out.print(""
 				+ "<script>"
 				+ "window.opener.location.reload();"
-				+ "location.href='detail?nno="+notice.getNno()+"&from=modify';"
+				+ "location.href='detail?bno="+board.getBno()+"&from=modify';"
 				+ "</script>"
 				+ "");
-		
+		out.close();
 	}
 	
 	@RequestMapping(value="/remove", method=RequestMethod.POST)
-	public void remove(int nno, HttpServletResponse response) throws Exception{
+	public void remove(int bno, HttpServletResponse response) throws Exception{
 		
-		noticeService.remove(nno);
+		boardService.remove(bno);
 		
 		response.setContentType("text/html;charset=utf-8");
 		PrintWriter out = response.getWriter();
@@ -119,6 +121,7 @@ public class NoticeController {
 				+ "window.opener.location.reload();window.close()"
 				+ "</script>"
 				+ "");
+		out.close();
 		
 	}
 	

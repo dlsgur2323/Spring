@@ -3,10 +3,6 @@
     pageEncoding="UTF-8" errorPage="/WEB-INF/views/error/500_by_JSP.jsp"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 
-<%
-	if(true) throw new SQLException("테스트");
-%>
-
 <!-- Content Wrapper. Contains page content -->
   <div>
     <jsp:include page="/WEB-INF/views/content_header.jsp">

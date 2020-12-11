@@ -66,6 +66,7 @@ function deleteFile(src) {
 	$.ajax({
 		url : "<%=request.getContextPath()%>/deleteImg.do",
 		data : JSON.stringify(fileData),
+		contentType : "application/json",
 		type : "post",
 		success : function(res) {
 			console.log(res);

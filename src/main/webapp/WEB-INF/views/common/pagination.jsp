@@ -50,9 +50,14 @@
 function searchList_go(page,url){
 	if(page<1) return;
 	
+	var perPageNum = 10;
+	if($('select[name="perPageNum"]').val()){
+		perPageNum = $('select[name="perPageNum"]').val();
+	}
+	
 	var jobForm=$('#jobForm');
 	jobForm.find("[name='page']").val(page);
-	jobForm.find("[name='perPageNum']").val($('select[name="perPageNum"]').val());
+	jobForm.find("[name='perPageNum']").val(perPageNum);
 	jobForm.find("[name='searchType']").val($('select[name="searchType"]').val());
 	jobForm.find("[name='keyword']").val($('div.input-group>input[name="keyword"]').val());
 	jobForm.find("[name='post']");

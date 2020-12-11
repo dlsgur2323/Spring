@@ -39,7 +39,7 @@ public class CommonController {
 
 	@RequestMapping(value="/main")
 	public String main() {
-		String url = "/common/main";
+		String url = "/common/main.open";
 		return url;
 	}
 	
@@ -81,7 +81,7 @@ public class CommonController {
 	@RequestMapping(value="/index", method=RequestMethod.GET)
 	public ModelAndView index(@RequestParam(defaultValue="M000000")String mCode, ModelAndView mnv)
 			throws ServletException, IOException, SQLException {
-		String url="/common/indexPage";
+		String url="/common/indexPage.page";
 		
 		List<MenuVO> menuList = menuService.getMainMenuList();
 		MenuVO menu = menuService.getMenuByMcode(mCode);

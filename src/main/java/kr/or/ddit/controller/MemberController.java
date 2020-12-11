@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kr.or.ddit.command.MemberModifyCommand;
 import kr.or.ddit.command.MemberRegistCommand;
 import kr.or.ddit.command.SearchCriteria;
@@ -42,12 +44,15 @@ public class MemberController {
 	private MemberService memberService;
 	
 	@RequestMapping("/main")
-	public void main() {}
+	public String main() {
+		String url = "member/main.open";
+		return url;
+	}
 	
 	@RequestMapping("/list")
 	public ModelAndView list(SearchCriteria cri, ModelAndView mnv) throws SQLException{
 		
-		String url = "member/list";
+		String url = "member/list.open";
 		
 		Map<String, Object> dataMap = memberService.getSearchMemberList(cri);
 		
@@ -59,7 +64,7 @@ public class MemberController {
 	
 	@RequestMapping("/registForm")
 	public String registForm() {
-		String url = "member/regist";
+		String url = "member/regist.open";
 		return url;
 	}
 	
@@ -160,7 +165,7 @@ public class MemberController {
 	@RequestMapping(value="/detail", method=RequestMethod.GET)
 	public String detail(String id, Model model) throws Exception{
 		
-		String url = "/member/detail";
+		String url = "/member/detail.open";
 		
 		MemberVO member = memberService.getMember(id);
 		
@@ -172,7 +177,7 @@ public class MemberController {
 	@RequestMapping(value="/modifyForm", method=RequestMethod.GET)
 	public String modifyForm(String id, Model model) throws Exception{
 		
-		String url = "/member/modify";
+		String url = "/member/modify.open";
 		
 		MemberVO member = memberService.getMember(id);
 		
@@ -273,6 +278,23 @@ public class MemberController {
 		return url;
 	}
 
+	@RequestMapping("/getMemberToJson")
+	@ResponseBody
+	public ResponseEntity<MemberVO> getMemberToJson(String id) throws Exception{
+		
+		ResponseEntity<MemberVO> result = null;
+		
+		try {
+			MemberVO member = memberService.getMember(id);
+			result = new ResponseEntity<MemberVO>(member, HttpStatus.OK);
+		} catch (SQLException e) {
+			result = new ResponseEntity<MemberVO>(HttpStatus.BAD_REQUEST);
+		}
+		
+		return result;
+		
+		
+	}
 	
 }
 

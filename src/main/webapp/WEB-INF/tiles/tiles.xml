@@ -2,9 +2,8 @@
 
 <tiles-definitions>
 	<definition name="base" template="/WEB-INF/tiles/template.jsp">
-		<put-attribute name="left" value="/WEB-INF/tiles/left.jsp" />
-		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
-		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
+		<put-attribute name="header" value="/WEB-INF/views/include/header.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/views/include/footer.jsp" />
 	</definition>
 
 	<definition name="*.page" extends="base">
@@ -19,21 +18,24 @@
 		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
 	</definition>
 	
-	
-	<definition name="baseEmpty" template="/WEB-INF/tiles/templateEmpty.jsp">
+	<definition name="open" template="/WEB-INF/tiles/open_template.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/include/open_header.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/views/include/open_footer.jsp" />
 	</definition>
-	
-	<definition name="*.part" extends="baseEmpty">
+
+	<definition name="*.open" extends="open">
 		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp"/>
 	</definition>
 
-	<definition name="*/*.part" extends="baseEmpty">
+	<definition name="*/*.open" extends="open">
 		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp"/>
 	</definition>
 	
-	<definition name="*/*/*.part" extends="baseEmpty">
+	<definition name="*/*/*.open" extends="open">
 		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp"/>
 	</definition>
+	
+	
 	
 </tiles-definitions>
 	

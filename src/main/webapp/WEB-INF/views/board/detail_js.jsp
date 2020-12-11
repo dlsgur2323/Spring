@@ -11,7 +11,7 @@ window.onload=function(){
 		//alert('modify btn click');
 		formObj.attr({
 			'action':'modifyForm.do',
-			'method':'post'
+			'method':'get'
 		});
 		formObj.submit();
 	});
@@ -29,5 +29,7 @@ window.onload=function(){
 		window.opener.location.reload(true);
 		window.close();
 	});
+	
+	replyjs();
 }
 </script>
