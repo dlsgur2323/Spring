@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <body>
 
@@ -48,17 +48,24 @@
 		          <div class="card-footer" >
 		          		<div class="row">
 			          		
-			          		
-			          		<div class="col-sm-3 text-center">
-			          			<button type="button" id="modifyBtn" class="btn btn-warning ">수 정</button>
-			          		</div>
-		          		
-			          		<div class="col-sm-3 text-center">
-			          			<button type="button" id="deleteBtn" class="btn btn-danger" >삭 제</button>
-			          		</div>
-			          		<div class="col-sm-3 text-center">
-			          			<button type="button" id="stopBtn" class="btn btn-info" >정 지</button>
-			          		</div>
+			          		<c:set var="visible" value="none"/>
+			          		<c:if test="${loginUser.id eq member.id }">
+				          		<c:set var="visible" value="visible"/>
+			          		</c:if>
+		          			<sec:authorize access="hasRole('ROLE_ADMIN')">
+				          		<c:set var="visible" value="visible"/>
+		          			</sec:authorize>
+		          			
+					          		<div class="col-sm-3 text-center" style="display:${visible}">
+					          			<button type="button" id="modifyBtn" class="btn btn-warning ">수 정</button>
+					          		</div>
+				          		
+					          		<div class="col-sm-3 text-center" style="display:${visible}">
+					          			<button type="button" id="deleteBtn" class="btn btn-danger" >삭 제</button>
+					          		</div>
+					          		<div class="col-sm-3 text-center" style="display:${visible}">
+					          			<button type="button" id="stopBtn" class="btn btn-info" >정 지</button>
+					          		</div>
 			          	
 			          		<div class="col-sm-3 text-center">
 			            		<button type="button" id="listBtn" onclick="CloseWindow();" class="btn btn-primary pull-right">닫 기</button>

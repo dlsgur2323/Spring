@@ -3,6 +3,13 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Board-Mapper">
 	
+	<select id="selectBoardByContent" parameterType="str" resultType="board">
+		select 
+		* 
+		from board
+		where content like '%'||#{fileName}||'%'
+	</select>
+	
 	<sql id="search">
 		<if test="searchType == 't'.toString()">
 			and title like '%'||#{keyword}||'%'			

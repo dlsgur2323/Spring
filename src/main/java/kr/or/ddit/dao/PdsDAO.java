@@ -12,6 +12,7 @@ public interface PdsDAO {
 	int selectPdsCriteriaTotalCount(SearchCriteria cri) throws SQLException;
 	
 	PdsVO selectPdsByPno(int pno)throws SQLException;
+	PdsVO selectPdsByContent(String fileName)throws SQLException;
 	
 	void insertPds(PdsVO pds)throws SQLException;
 	void updatePds(PdsVO pds)throws SQLException;

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/task"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<beans:bean id="fileRemoveScheduler"
+				class="kr.or.ddit.scheduler.FileRemoveScheduler"
+				p:filePath-ref="imgPath"
+				p:boardService-ref="boardService"
+				p:noticeService-ref="noticeService"
+				p:pdsService-ref="pdsService"
+				/>
+				
+	<scheduler id="removeScheduler"/>
+	<scheduled-tasks scheduler="removeScheduler">
+		<scheduled ref="fileRemoveScheduler"
+				   method="fileRemove"
+				   cron="0/10 * * * * *"/>
+	</scheduled-tasks>
+</beans:beans>

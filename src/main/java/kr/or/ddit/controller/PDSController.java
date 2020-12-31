@@ -75,12 +75,13 @@ public class PDSController {
 	}
 	
 	@RequestMapping(value="/regist", method= RequestMethod.POST, produces="text/plain;charset=utf-8")
-	public void regist(PdsRegistCommand registReq, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void regist(PdsRegistCommand registReq, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		List<AttachVO> attachList = saveFile(registReq);
 		
 		PdsVO pds = registReq.toPdsVO();			
 		pds.setAttachList(attachList);
+		pds.setTitle((String)request.getAttribute("XSStitle"));
 		service.regist(pds);
 		
 		response.setContentType("text/html;charset=utf-8");
@@ -93,7 +94,8 @@ public class PDSController {
 				+ "</script>"
 				+ "");
 		out.close();
-				
+		
+		model.addAttribute("attachList", attachList);
 	}
 
 	private List<AttachVO> saveFile(PdsRegistCommand registReq) throws Exception{
@@ -171,7 +173,7 @@ public class PDSController {
 	}
 	
 	@RequestMapping(value="modify", method=RequestMethod.POST)
-	public void modifyPOST(PdsModifyCommand modifyReq, HttpServletResponse response) throws Exception{
+	public void modifyPOST(PdsModifyCommand modifyReq, Model model, HttpServletResponse response) throws Exception{
 		String uploadPath = fileUploadPath;
 		
 		if(modifyReq.getDeleteFile() != null && modifyReq.getDeleteFile().length > 0) {
@@ -200,6 +202,8 @@ public class PDSController {
 				+ "location.href='detail?pno=" + pds.getPno() + "&from=modify';"
 				+ "</script>");
 		out.close();
+		
+		model.addAttribute("attachList", attachList);
 		
 	}
 	

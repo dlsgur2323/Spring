@@ -3,6 +3,7 @@ package kr.or.ddit.controller;
 import java.io.PrintWriter;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,10 @@ public class NoticeController {
 	}
 	
 	@RequestMapping(value="/regist", method=RequestMethod.POST)
-	public void regist(NoticeVO notice, HttpServletResponse response)throws Exception {
+	public void regist(NoticeVO notice, HttpServletRequest request, HttpServletResponse response)throws Exception {
+		
+		notice.setTitle((String)request.getAttribute("XSStitle"));
+		
 		noticeService.write(notice);
 		
 		response.setContentType("text/html;charset=utf-8");
@@ -91,9 +95,10 @@ public class NoticeController {
 	}
 	
 	@RequestMapping(value="/modify",method=RequestMethod.POST)
-	public void modify(NoticeVO notice, HttpServletResponse response)
+	public void modify(NoticeVO notice, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		// 파라메터 저장
+		notice.setTitle((String)request.getAttribute("XSStitle"));
 		noticeService.modify(notice);
 		
 		response.setContentType("text/html;charset=utf-8");

@@ -14,6 +14,8 @@ public interface NoticeDAO {
 
 	NoticeVO selectNoticeByNno(int nno) throws SQLException;
 
+	NoticeVO selectNoticeByContent(String fileName) throws SQLException;
+
 	void insertNotice(NoticeVO Notice) throws SQLException;
 
 	void updateNotice(NoticeVO Notice) throws SQLException;

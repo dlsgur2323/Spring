@@ -42,6 +42,13 @@ public class NoticeDAOImpl implements NoticeDAO{
 				sqlSession.selectOne("Notice-Mapper.selectNoticeByNno",nno);
 		return notice;
 	}
+	
+	@Override
+	public NoticeVO selectNoticeByContent(String fileName) throws SQLException {
+		NoticeVO notice=
+				sqlSession.selectOne("Notice-Mapper.selectNoticeByContent",fileName);
+		return notice;
+	}
 
 	@Override
 	public void insertNotice(NoticeVO notice) throws SQLException {

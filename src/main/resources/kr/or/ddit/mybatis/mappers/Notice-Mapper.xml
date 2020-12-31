@@ -2,6 +2,13 @@
 
 <mapper namespace="Notice-Mapper">
 	
+	<select id="selectNoticeByContent" parameterType="str" resultType="notice">
+		select 
+		* 
+		from notice
+		where content like '%'||#{fileName}||'%'
+	</select>
+	
 	<select id="selectNoticeByNno" parameterType="int" resultType="notice">
 		select 
 		* 

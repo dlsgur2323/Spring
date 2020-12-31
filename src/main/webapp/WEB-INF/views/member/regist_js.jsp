@@ -43,6 +43,12 @@ function idCheck_go(){
 			}
 		},
 		error : function(error){
+			if(error.status == "302"){
+				alert("세션이 만료되었습니다.\n로그인 하세요.");
+				window.close();
+				window.opener.parent.document.location.reload();
+				return;
+			}
 			alert("시스템 장애로 가입이 불가합니다.")
 		}
 	});

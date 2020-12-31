@@ -18,6 +18,9 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,12 +30,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import kr.or.ddit.command.MemberModifyCommand;
 import kr.or.ddit.command.MemberRegistCommand;
 import kr.or.ddit.command.SearchCriteria;
 import kr.or.ddit.dto.MemberVO;
+import kr.or.ddit.security.CustomAuthenticationProvider;
+import kr.or.ddit.security.User;
 import kr.or.ddit.service.MemberService;
 import kr.or.ddit.utils.ExceptionLoggerHelper;
 
@@ -186,8 +189,11 @@ public class MemberController {
 		return url;
 	}
 	
+	@Autowired
+	private CustomAuthenticationProvider authProvider;
+	
 	@RequestMapping(value="/modify", method=RequestMethod.POST)
-	public void modify(MemberModifyCommand modifyReq, HttpSession session, HttpServletResponse response)
+	public void modify(MemberModifyCommand modifyReq, Authentication auth, HttpSession session, HttpServletResponse response)
 			throws Exception {
 		
 		MemberVO member = modifyReq.toParseMember();//파일을 저장하고 수정할 MemberVO 리턴
@@ -201,10 +207,21 @@ public class MemberController {
 		
 		memberService.modify(member);
 		
-		MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
+		//MemberVO loginUser = (MemberVO)session.getAttribute("loginUser");
 		
-		if(loginUser != null && member.getId().equals(loginUser.getId())) {
-			session.setAttribute("loginUser", member);
+		if(auth.getName().equals(member.getId())) {
+			MemberVO updateMember = memberService.getMember(auth.getName());
+			
+			User authUser = new User(updateMember);
+			
+			UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(authUser.getUsername(), authUser.getPassword(), authUser.getAuthorities());
+			
+			newAuth.setDetails(authUser);
+			
+			SecurityContextHolder.getContext().setAuthentication(newAuth);
+			
+			session.setAttribute("loginUser", authUser.getMember());
+			
 		}
 		
 		response.setContentType("text/html;charset=utf-8");

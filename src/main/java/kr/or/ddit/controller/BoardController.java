@@ -3,6 +3,7 @@ package kr.or.ddit.controller;
 import java.io.PrintWriter;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,11 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="/regist", method=RequestMethod.POST)
-	public void regist(BoardVO board, HttpServletResponse response)throws Exception {
+	public void regist(BoardVO board, HttpServletRequest request, HttpServletResponse response)throws Exception {
+		board.setTitle((String)request.getAttribute("XSStitle"));
+
 		boardService.write(board);
+		
 		
 		response.setContentType("text/html;charset=utf-8");
 		
@@ -93,9 +97,10 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value="/modify",method=RequestMethod.POST)
-	public void modify(BoardVO board, HttpServletResponse response)
+	public void modify(BoardVO board, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		// 파라메터 저장
+		board.setTitle((String)request.getAttribute("XSStitle"));
 		boardService.modify(board);
 		
 		response.setContentType("text/html;charset=utf-8");

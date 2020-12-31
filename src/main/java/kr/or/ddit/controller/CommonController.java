@@ -35,7 +35,24 @@ public class CommonController {
 	private MemberService service;
 	
 	@RequestMapping("/common/loginForm")
-	public void loginForm() {}
+	public String loginForm(@RequestParam(defaultValue="0")String error, HttpServletResponse response) throws Exception{
+		String url = "common/loginForm";
+		
+		if(error.equals("1")) {
+			response.setStatus(302);
+		}
+		
+		return url;
+	}
+	
+	@RequestMapping("/security/accessDenied")
+	public String accessDenied(HttpServletResponse response) {
+		String url="security/accessDenied.open";
+		
+		response.setStatus(302);
+		
+		return url;
+	}
 
 	@RequestMapping(value="/main")
 	public String main() {
@@ -44,34 +61,34 @@ public class CommonController {
 	}
 	
 	
-	@RequestMapping(value="/common/login", method=RequestMethod.POST)
-	public String login(String id, String pwd, HttpSession session)
-			throws ServletException, IOException {
-		
-		String url = "redirect:/index.do";  //성공하면
-		
-		//로그인 처리
-		try {
-			service.login(id, pwd, session);
-		} catch (SQLException e) {  //에러처리
-			e.printStackTrace();
-		}catch (NotFoundIDException | InvalidPasswordException e) {  //id와 pwd가 틀리면
-			url="redirect:/";
-			session.setAttribute("msg", e.getMessage());
-		}
-		
-		return url;
-	}
-	
-	@RequestMapping(value="/common/logout", method=RequestMethod.GET)
-	public String logout(HttpSession session) throws Exception {
-		String url="redirect:/";
-		
-		session.invalidate();
-		
-		return url;
-	}
-	
+//	@RequestMapping(value="/common/login", method=RequestMethod.POST)
+//	public String login(String id, String pwd, HttpSession session)
+//			throws ServletException, IOException {
+//		
+//		String url = "redirect:/index.do";  //성공하면
+//		
+//		//로그인 처리
+//		try {
+//			service.login(id, pwd, session);
+//		} catch (SQLException e) {  //에러처리
+//			e.printStackTrace();
+//		}catch (NotFoundIDException | InvalidPasswordException e) {  //id와 pwd가 틀리면
+//			url="redirect:/";
+//			session.setAttribute("msg", e.getMessage());
+//		}
+//		
+//		return url;
+//	}
+//	
+//	@RequestMapping(value="/common/logout", method=RequestMethod.GET)
+//	public String logout(HttpSession session) throws Exception {
+//		String url="redirect:/";
+//		
+//		session.invalidate();
+//		
+//		return url;
+//	}
+//	
 	
 	
 	
@@ -109,6 +126,35 @@ public class CommonController {
 		return entity;
 	}
 	
+	@RequestMapping("/common/loginTimeOut")
+	public void loginTimeOut(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		
+		response.setContentType("text/html;charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.print(""
+				+ "<script>"
+				+ "alert('세션이 만료되었습니다.\\n다시 로그인하세요!');"
+				+ "location.href='"+request.getContextPath()+"';"
+				+ "</script>"
+				+ "");
+		out.close();
+		
+	}
+	
+	@RequestMapping("/common/loginExpired")
+	public void loginExpired(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		
+		response.setContentType("text/html;charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.print(""
+				+ "<script>"
+				+ "alert('중복 로그인이 확인되었습니다.\\n다시 로그인하면 다른 장치에서 로그인은 취소됩니다!');"
+				+ "location.href='"+request.getContextPath()+"';"
+				+ "</script>"
+				+ "");
+		out.close();
+		
+	}
 	
 }
 

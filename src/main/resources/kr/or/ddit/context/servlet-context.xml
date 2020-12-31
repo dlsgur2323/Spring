@@ -43,6 +43,30 @@
 	
 	<context:component-scan base-package="kr.or.ddit.controller" />
 	
-	
+	<interceptors>
+		<interceptor>
+			<mapping path="/**/regist.do"/>
+			<mapping path="/**/modify.do"/>
+			<beans:bean class="kr.or.ddit.interceptor.XSSInterceptor"/>
+		</interceptor>
+		<interceptor>
+			<mapping path="/pds/regist.do"/>
+			<mapping path="/pds/modify.do"/>
+			<beans:bean class="kr.or.ddit.interceptor.AttachFileLogInterceptor"/>
+		</interceptor>
+	</interceptors>
 	
 </beans:beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
